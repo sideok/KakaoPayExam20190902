@@ -102,7 +102,7 @@ public class TransactionHistoryDAO {
 				                          .collect(Collectors.toList());
 		
 		// 고객별 SUM
-		Long maxAmt = new Long(0);
+		Long maxAmt = Long.valueOf(0);
 		String maxId = "";
 		for(String id : llAccountId) {
 			Long tmpLong = yearData.stream().filter(TransactionHistoryVO -> TransactionHistoryVO.getACCOUNT_ID().equals(id) && TransactionHistoryVO.getCANCEL_YN().equals("N"))
