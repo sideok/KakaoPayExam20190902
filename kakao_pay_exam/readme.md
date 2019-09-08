@@ -16,6 +16,8 @@
   - Spring Version : 5
 * 개발 언어
   - java 8
+* 개발IDE
+  - STS 4
 * 배포환경
   - Maven
 
