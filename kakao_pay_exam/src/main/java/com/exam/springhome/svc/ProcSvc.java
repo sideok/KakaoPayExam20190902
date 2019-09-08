@@ -35,7 +35,7 @@ public class ProcSvc {
 	
 	// 데이터_부점정보 DAO
 	@Autowired
-	BranchInfoDAO daoBranchInfo	;
+	BranchInfoDAO daoBranchInfo;
 	
 	/**
 	 * 입력년도에서 거래금액합계가 가장 큰 고객을 추출하는 Service
