@@ -1,19 +1,18 @@
 package com.exam.springhome.dao;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import com.exam.springhome.vo.AccountInfoVO;
-import com.exam.springhome.vo.TransactionHistoryVO;
+import com.exam.springhome.vo.BranchInfoVO;
 
 /**
  * 계좌정보DAO
@@ -22,9 +21,6 @@ import com.exam.springhome.vo.TransactionHistoryVO;
 
 @Repository("AccountInfoDAO")
 public class AccountInfoDAO {
-	
-	@Value("${data.path}") 
-	private String file_Path;
 	
 	// 데이터리스트
 	private List<AccountInfoVO> mlvData = new ArrayList<>();
@@ -41,16 +37,21 @@ public class AccountInfoDAO {
 		if(mlvData == null || mlvData.isEmpty()) {
 			/* CSV파일을 데이터베이스로 간주하기 떄문에 파일IO를 통해 DAO를 처리한다. */
 			try {
-				Files.lines(Paths.get(System.getProperty("user.dir") + file_Path + "/data_account_info.csv"))
-				     .skip(1)
-				     .forEach(line -> { String[] arrAccountInfo = line.split(",");
-						            	// 데이터 갯수가 잘못 조회되면 continue
-						            	if(arrAccountInfo.length != 3) return;
-						            	
-						            	AccountInfoVO lvAccountInfoVO = new AccountInfoVO(arrAccountInfo[0], arrAccountInfo[1], arrAccountInfo[2]);
-						            	mlvData.add(lvAccountInfoVO);
-				     			}
-						);
+				BufferedReader in=new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream( "data_account_info.csv"), "UTF-8"));
+				
+				String line = "";
+				int i = 0;
+				while ((line = in.readLine()) != null) {
+					// 헤더 continue
+					if(i++ == 0) continue; 
+					
+					String[] arrAccountInfo = line.split(",");
+	            	// 데이터 갯수가 잘못 조회되면 continue
+	            	if(arrAccountInfo.length != 3) continue;
+	            	
+	            	AccountInfoVO lvAccountInfoVO = new AccountInfoVO(arrAccountInfo[0], arrAccountInfo[1], arrAccountInfo[2]);
+	            	mlvData.add(lvAccountInfoVO);
+				}
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}

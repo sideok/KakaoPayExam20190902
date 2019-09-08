@@ -2,9 +2,8 @@ package com.exam.springhome.dao;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -13,8 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import com.exam.springhome.vo.TransactionHistoryVO;
@@ -26,9 +23,6 @@ import com.exam.springhome.vo.TransactionHistoryVO;
 
 @Repository("TransactionHistoryDAO")
 public class TransactionHistoryDAO {
-	
-	@Value("${data.path}") 
-	private String file_Path;
 	
 	// 데이터리스트
 	private List<TransactionHistoryVO> mlvData = new ArrayList<>();
@@ -45,22 +39,29 @@ public class TransactionHistoryDAO {
 		if(mlvData == null || mlvData.isEmpty()) {
 			/* CSV파일을 데이터베이스로 간주하기 떄문에 파일IO를 통해 DAO를 처리한다. */
 			try {
-				Files.lines(Paths.get(System.getProperty("user.dir") + file_Path + "/data_transaction_history.csv"))
-				     .skip(1)
-				     .forEach(line -> { 
-										String[] arrTransactionHistory= line.split(",");
-										// 데이터 갯수가 잘못 조회되면 continue
-										if(arrTransactionHistory.length != 6) return;
-										
-										TransactionHistoryVO lvTransactionHistoryVO = new TransactionHistoryVO(arrTransactionHistory[0]
-												                                                             , arrTransactionHistory[1]
-										    			                                                     , Integer.parseInt(arrTransactionHistory[2])
-										            			                                             , Long.parseLong(arrTransactionHistory[3])
-										            			                                             , Long.parseLong(arrTransactionHistory[4])
-										            			                                             , arrTransactionHistory[5] );
-										mlvData.add(lvTransactionHistoryVO);
-				     			}
-						);
+				if(this.getClass().getResource("data_transaction_history.csv") == null) System.out.println("11111");
+				System.out.println(this.getClass().getResourceAsStream( "data_transaction_history.csv").toString());
+				System.out.println(222);
+				BufferedReader in=new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream( "data_transaction_history.csv"), "UTF-8"));
+				
+				String line = "";
+				int i = 0;
+				while ((line = in.readLine()) != null) {
+					// 헤더 continue
+					if(i++ == 0) continue; 
+					
+					String[] arrTransactionHistory= line.split(",");
+					// 데이터 갯수가 잘못 조회되면 continue
+					if(arrTransactionHistory.length != 6) continue;
+					
+					TransactionHistoryVO lvTransactionHistoryVO = new TransactionHistoryVO(arrTransactionHistory[0]
+							, arrTransactionHistory[1]
+									, Integer.parseInt(arrTransactionHistory[2])
+									, Long.parseLong(arrTransactionHistory[3])
+									, Long.parseLong(arrTransactionHistory[4])
+									, arrTransactionHistory[5] );
+					mlvData.add(lvTransactionHistoryVO);
+				}
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
