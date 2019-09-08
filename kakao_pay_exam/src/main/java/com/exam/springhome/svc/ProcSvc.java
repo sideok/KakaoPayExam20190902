@@ -223,7 +223,7 @@ public class ProcSvc {
 																		    } else {
 																		    	rtnMap.put("BRANCH_INFO", lvBranchInfo.get(0).getBRANCH_CODE()+","+lvBranchInfo.get(0).getBRANCH_NAME()); // 관리점
 																		    }
-																		    rtnMap.put("AMOUNT", vo.getAMOUNT()); // 거래금액
+																		    rtnMap.put("AMOUNT", vo.getAMOUNT() - vo.getFEE()); // 거래금액
 																		    return rtnMap;
 																	   })
 																	   .collect(Collectors.groupingBy((map) -> Optional.ofNullable((String)map.get("BRANCH_INFO")).orElse("X"), Collectors.summingLong((map) -> Optional.ofNullable((Long)map.get("AMOUNT")).orElse(Long.valueOf(0)))));
