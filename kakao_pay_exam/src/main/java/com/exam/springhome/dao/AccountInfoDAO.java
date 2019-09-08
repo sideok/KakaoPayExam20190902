@@ -4,13 +4,16 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import com.exam.springhome.vo.AccountInfoVO;
+import com.exam.springhome.vo.TransactionHistoryVO;
 
 /**
  * 계좌정보DAO
@@ -65,7 +68,7 @@ public class AccountInfoDAO {
 	 */
 	public List<AccountInfoVO> getData(String key) {
 		// 틀정 계좌번호로 데이터 추출
-		return getData().stream().filter(AccountInfoVO -> AccountInfoVO.getACCOUNT_ID().equals(key))
+		return getData().stream().filter(vo -> vo.getACCOUNT_ID().equals(key))
 				                 .collect(Collectors.toList());
 	}
 	

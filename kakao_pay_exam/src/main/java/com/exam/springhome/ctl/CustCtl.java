@@ -1,5 +1,6 @@
 package com.exam.springhome.ctl;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +24,20 @@ public class CustCtl {
 	ProcSvc svcProc;
 	
 	@GetMapping("/get-max-amt/{year}")
-	public Map[] getMaxAmt(@PathVariable String year) { 
+	public List<Map<String, Object>> getMaxAmt(@PathVariable String year) { 
 		return svcProc.getMaxSumAmoutByYear(year); 
 	} 
+	@GetMapping("/get-max-amt")
+	public List<Map<String, Object>> getMaxAmt() { 
+		return svcProc.getMaxSumAmoutByYear(null); 
+	} 
 	
-	@GetMapping("/noTranCust") 
-	public String testPage() { 
-		return "testPage"; 
+	@GetMapping("/get-no-hist-cust/{year}") 
+	public List<Map<String, Object>> testPage(@PathVariable String year) { 
+		return svcProc.getAccountNoHistory(year);
+	} 
+	@GetMapping("/get-no-hist-cust") 
+	public List<Map<String, Object>> testPage() { 
+		return svcProc.getAccountNoHistory(null);
 	} 
 }

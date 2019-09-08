@@ -70,6 +70,25 @@ public class TransactionHistoryDAO {
 	}
 	
 	/***
+	 * 입력년도or입력년월or입력년월일로 데이터 조회
+	 * -취소여부가 N인 데이터
+	 * -파라메터가 없을경우 전체 데이터 출력
+	 * query :
+	 * 
+	 * SELECT *
+	 *   FROM 데이터_거래내역
+	 *  WHERE 거래일자 LIKE ${dt} || '%'
+	 *  
+	 * @return List<BranchInfoVO>
+	 */
+	public List<TransactionHistoryVO> getDataByDate(String dt) {
+		
+		return getData().stream()
+                        .filter(vo -> vo.getTRANSATION_DATE().startsWith(dt) && "N".equals(vo.getCANCEL_YN()))
+                        .collect(Collectors.toList());
+	}
+	
+	/***
 	 * 입력 연도별 합계 금액이 가장 많은 고객을 추출하는 함수
 	 * query :
 	 *  
@@ -94,19 +113,24 @@ public class TransactionHistoryDAO {
 		/* 데이터베이스를 파일의 내용으로 대체하였기 때문에 sql이 아닌 코딩을 통해서 데이터를 추출처리 함 */
 		
 		// 입력 년도의 데이터 추출
-		List<TransactionHistoryVO> yearData = getData().stream().filter(TransactionHistoryVO -> TransactionHistoryVO.getTRANSATION_DATE().startsWith(pYear)).collect(Collectors.toList());
+		List<TransactionHistoryVO> yearData = getData().stream()
+				                                       .filter(vo -> vo.getTRANSATION_DATE().startsWith(pYear))
+				                                       .collect(Collectors.toList());
 		
 		// 해당년도 고객 추출
-		List<String> llAccountId = yearData.stream().map(TransactionHistoryVO::getACCOUNT_ID)
-				                          .distinct()
-				                          .collect(Collectors.toList());
+		List<String> llAccountId = yearData.stream()
+				                           .map(TransactionHistoryVO::getACCOUNT_ID)
+				                           .distinct()
+				                           .collect(Collectors.toList());
 		
 		// 고객별 SUM
 		Long maxAmt = Long.valueOf(0);
 		String maxId = "";
 		for(String id : llAccountId) {
-			Long tmpLong = yearData.stream().filter(TransactionHistoryVO -> TransactionHistoryVO.getACCOUNT_ID().equals(id) && TransactionHistoryVO.getCANCEL_YN().equals("N"))
-					                        .mapToLong(TransactionHistoryVO -> TransactionHistoryVO.getAMOUNT() - TransactionHistoryVO.getFEE()).sum();
+			Long tmpLong = yearData.stream()
+					               .filter(vo -> vo.getACCOUNT_ID().equals(id) && vo.getCANCEL_YN().equals("N"))
+					               .mapToLong(vo -> vo.getAMOUNT() - vo.getFEE())
+					               .sum();
 		
 			if(tmpLong > maxAmt) {
 				maxAmt = tmpLong;
@@ -120,4 +144,5 @@ public class TransactionHistoryDAO {
 		
 		return output;
 	}
+		
 }

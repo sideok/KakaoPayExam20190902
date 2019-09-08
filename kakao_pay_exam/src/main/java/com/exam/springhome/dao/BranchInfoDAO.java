@@ -5,10 +5,12 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
+import com.exam.springhome.vo.AccountInfoVO;
 import com.exam.springhome.vo.BranchInfoVO;
 
 /**
@@ -31,7 +33,7 @@ public class BranchInfoDAO {
 	 * SELECT *
 	 *   FROM 데이터_지점정보
 	 *   
-	 * @return List<AccountInfoVO>
+	 * @return List<BranchInfoVO>
 	 */
 	public List<BranchInfoVO> getData() {
 		if(mlvData == null || mlvData.isEmpty()) {
@@ -54,4 +56,17 @@ public class BranchInfoDAO {
 		return mlvData;
 	}
 	
+	/***
+	 * 계좌번호 로 계좌정보 조회
+	 * query :
+	 * SELECT *
+	 *   FROM 데이터_관리점정보
+	 *  WHERE 관리점코드 = ${관리점코드}
+	 * @return List<BranchInfoVO>
+	 */
+	public List<BranchInfoVO> getData(String key) {
+		// 틀정 계좌번호로 데이터 추출
+		return getData().stream().filter(vo -> vo.getBRANCH_CODE().equals(key))
+				                 .collect(Collectors.toList());
+	}
 }
