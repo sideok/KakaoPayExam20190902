@@ -53,11 +53,11 @@ public class TransactionHistoryDAO {
 					if(arrTransactionHistory.length != 6) continue;
 					
 					TransactionHistoryVO lvTransactionHistoryVO = new TransactionHistoryVO(arrTransactionHistory[0]
-							, arrTransactionHistory[1]
-									, Integer.parseInt(arrTransactionHistory[2])
-									, Long.parseLong(arrTransactionHistory[3])
-									, Long.parseLong(arrTransactionHistory[4])
-									, arrTransactionHistory[5] );
+																							, arrTransactionHistory[1]
+																							, Integer.parseInt(arrTransactionHistory[2])
+																							, Long.parseLong(arrTransactionHistory[3])
+																							, Long.parseLong(arrTransactionHistory[4])
+																							, arrTransactionHistory[5] );
 					mlvData.add(lvTransactionHistoryVO);
 				}
 			} catch (IOException e1) {
@@ -83,8 +83,8 @@ public class TransactionHistoryDAO {
 	public List<TransactionHistoryVO> getDataByDate(String dt) {
 		
 		return getData().stream()
-                        .filter(vo -> vo.getTRANSATION_DATE().startsWith(dt) && "N".equals(vo.getCANCEL_YN()))
-                        .collect(Collectors.toList());
+						.filter(vo -> vo.getTRANSATION_DATE().startsWith(dt) && "N".equals(vo.getCANCEL_YN()))
+						.collect(Collectors.toList());
 	}
 	
 	/***
@@ -113,23 +113,23 @@ public class TransactionHistoryDAO {
 		
 		// 입력 년도의 데이터 추출
 		List<TransactionHistoryVO> yearData = getData().stream()
-				                                       .filter(vo -> vo.getTRANSATION_DATE().startsWith(pYear))
-				                                       .collect(Collectors.toList());
+														.filter(vo -> vo.getTRANSATION_DATE().startsWith(pYear))
+														.collect(Collectors.toList());
 		
 		// 해당년도 고객 추출
 		List<String> llAccountId = yearData.stream()
-				                           .map(TransactionHistoryVO::getACCOUNT_ID)
-				                           .distinct()
-				                           .collect(Collectors.toList());
+											.map(TransactionHistoryVO::getACCOUNT_ID)
+											.distinct()
+											.collect(Collectors.toList());
 		
 		// 고객별 SUM
 		Long maxAmt = Long.valueOf(0);
 		String maxId = "";
 		for(String id : llAccountId) {
 			Long tmpLong = yearData.stream()
-					               .filter(vo -> vo.getACCOUNT_ID().equals(id) && vo.getCANCEL_YN().equals("N"))
-					               .mapToLong(vo -> vo.getAMOUNT() - vo.getFEE())
-					               .sum();
+									.filter(vo -> vo.getACCOUNT_ID().equals(id) && vo.getCANCEL_YN().equals("N"))
+									.mapToLong(vo -> vo.getAMOUNT() - vo.getFEE())
+									.sum();
 		
 			if(tmpLong > maxAmt) {
 				maxAmt = tmpLong;

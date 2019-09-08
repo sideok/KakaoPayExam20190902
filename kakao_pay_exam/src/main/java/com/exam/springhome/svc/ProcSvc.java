@@ -114,8 +114,8 @@ public class ProcSvc {
 		for(String y : arrYear) {
 			// 해당년도 거래고객번호 추출
 			String strAccount = daoTransactionHistory.getDataByDate(y).stream()
-					                                                  .map(vo -> vo.getACCOUNT_ID())
-					                                                  .collect(Collectors.joining(","));
+																		.map(vo -> vo.getACCOUNT_ID())
+																		.collect(Collectors.joining(","));
 			
 			// 반환값 세팅
 			for(AccountInfoVO vo : accountList) {
@@ -187,8 +187,8 @@ public class ProcSvc {
 			
 			// 정렬하여 금액데이터 세팅
 			outputMap.put("dataList", dataListMap.stream()
-												 .sorted((p1, p2) -> Long.compare( (Long)p2.get("sumAmt"), (Long)p1.get("sumAmt")))
-												 .collect(Collectors.toList())      );
+													.sorted((p1, p2) -> Long.compare( (Long)p2.get("sumAmt"), (Long)p1.get("sumAmt")))
+													.collect(Collectors.toList())      );
 
 			output.add(outputMap);
 		}
@@ -213,20 +213,20 @@ public class ProcSvc {
 		
 		// 부점별 거래 합계금액 계산
 		Map<String, Long> sumByBranch = daoTransactionHistory.getData().stream()
-																	   .filter(vo -> "N".equals(vo.getCANCEL_YN()))
-																	   .map(vo -> { 
-																		    Map<String, Object> rtnMap = new HashMap<>(); // return Map
-																		    List<AccountInfoVO> lvAccountInfo = daoAccountInfo.getData(vo.getACCOUNT_ID()); // 계좌정보
-																		    List<BranchInfoVO> lvBranchInfo = daoBranchInfo.getData(lvAccountInfo.get(0).getBRANCH_CODE()); // 계좌정보
-																		    if("분당점".equals(lvBranchInfo.get(0).getBRANCH_NAME())) {
-																		    	rtnMap.put("BRANCH_INFO", "A,판교점"); // 관리점
-																		    } else {
-																		    	rtnMap.put("BRANCH_INFO", lvBranchInfo.get(0).getBRANCH_CODE()+","+lvBranchInfo.get(0).getBRANCH_NAME()); // 관리점
-																		    }
-																		    rtnMap.put("AMOUNT", vo.getAMOUNT() - vo.getFEE()); // 거래금액
-																		    return rtnMap;
-																	   })
-																	   .collect(Collectors.groupingBy((map) -> Optional.ofNullable((String)map.get("BRANCH_INFO")).orElse("X"), Collectors.summingLong((map) -> Optional.ofNullable((Long)map.get("AMOUNT")).orElse(Long.valueOf(0)))));
+																		.filter(vo -> "N".equals(vo.getCANCEL_YN()))
+																		.map(vo -> { 
+																			Map<String, Object> rtnMap = new HashMap<>(); // return Map
+																			List<AccountInfoVO> lvAccountInfo = daoAccountInfo.getData(vo.getACCOUNT_ID()); // 계좌정보
+																			List<BranchInfoVO> lvBranchInfo = daoBranchInfo.getData(lvAccountInfo.get(0).getBRANCH_CODE()); // 계좌정보
+																			if("분당점".equals(lvBranchInfo.get(0).getBRANCH_NAME())) {
+																				rtnMap.put("BRANCH_INFO", "A,판교점"); // 관리점
+																			} else {
+																				rtnMap.put("BRANCH_INFO", lvBranchInfo.get(0).getBRANCH_CODE()+","+lvBranchInfo.get(0).getBRANCH_NAME()); // 관리점
+																			}
+																			rtnMap.put("AMOUNT", vo.getAMOUNT() - vo.getFEE()); // 거래금액
+																			return rtnMap;
+																		})
+																		.collect(Collectors.groupingBy((map) -> Optional.ofNullable((String)map.get("BRANCH_INFO")).orElse("X"), Collectors.summingLong((map) -> Optional.ofNullable((Long)map.get("AMOUNT")).orElse(Long.valueOf(0)))));
 		
 		// 조회결과 세팅
 		Map<String, Object> outputMap = new HashMap<String, Object>();

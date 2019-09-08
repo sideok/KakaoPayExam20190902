@@ -70,6 +70,6 @@ public class BranchInfoDAO {
 	public List<BranchInfoVO> getData(String key) {
 		// 틀정 계좌번호로 데이터 추출
 		return getData().stream().filter(vo -> vo.getBRANCH_CODE().equals(key))
-				                 .collect(Collectors.toList());
+									.collect(Collectors.toList());
 	}
 }
