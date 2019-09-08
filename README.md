@@ -23,7 +23,7 @@
 * 실행환경 구성
   - java 8 이상 설치
   - 8080 port 미사용 상태
-* 하단의 github 경로 상의 "Exam-0.0.1-SNAPSHOT.jar", "start.bat" 파일을 다운로드 받아 동일한 경로의 폴더에 위치시킨 뒤 "start.bat" 파일을 실행시키면 tomcat WAS가 실행됩니다.
+* 하단의 github 경로 상의 "exam.zip" 파일을 다운로드 받아 압축을 해제한 뒤 "start.bat" 파일을 실행시키면 tomcat WAS가 실행됩니다.
   - github : <https://github.com/sideok/KakaoPayExam20190902>
   - 다른 방법으로는 shell에서 "java -jar Exam-0.0.1-SNAPSHOT.jar" 명령어를 사용하여 실행할 수 도 있습니다.(windows os 기준)
 * 빌드는 Spring boot의 Maven을 이용하여 jar파일로 빌드를 수행하였습니다.
