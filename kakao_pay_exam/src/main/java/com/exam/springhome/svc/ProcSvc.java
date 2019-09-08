@@ -166,7 +166,7 @@ public class ProcSvc {
 																					Map<String, Object> rtnMap = new HashMap<>(); // return Map
 																					List<AccountInfoVO> lvAccountInfo = daoAccountInfo.getData(vo.getACCOUNT_ID()); // 계좌정보
 																					rtnMap.put("BRANCH_CODE", lvAccountInfo.get(0).getBRANCH_CODE()); // 관리점 코드
-																					rtnMap.put("AMOUNT", vo.getAMOUNT()); // 거래금액
+																					rtnMap.put("AMOUNT", vo.getAMOUNT() - vo.getFEE()); // 거래금액
 																					return rtnMap;
 																				})
 																				.collect(Collectors.groupingBy((map) -> Optional.ofNullable((String)map.get("BRANCH_CODE")).orElse("X"), Collectors.summingLong((map) -> Optional.ofNullable((Long)map.get("AMOUNT")).orElse(Long.valueOf(0)))));

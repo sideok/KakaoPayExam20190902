@@ -40,8 +40,6 @@ public class TransactionHistoryDAO {
 			/* CSV파일을 데이터베이스로 간주하기 떄문에 파일IO를 통해 DAO를 처리한다. */
 			try {
 				if(this.getClass().getResource("data_transaction_history.csv") == null) System.out.println("11111");
-				System.out.println(this.getClass().getResourceAsStream( "data_transaction_history.csv").toString());
-				System.out.println(222);
 				BufferedReader in=new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream( "data_transaction_history.csv"), "UTF-8"));
 				
 				String line = "";
